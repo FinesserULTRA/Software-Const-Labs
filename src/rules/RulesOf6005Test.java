@@ -21,5 +21,11 @@ public class RulesOf6005Test {
                 RulesOf6005.mayUseCodeInAssignment(false, true, false, false, false));
         assertTrue("Expected true: self-written required code",
                 RulesOf6005.mayUseCodeInAssignment(true, false, true, true, true));
+        
+        // My test cases
+        assertFalse("Expected false: using past 6.005 coursework",
+                RulesOf6005.mayUseCodeInAssignment(false, true, true, true, false));
+        assertTrue("Expected true: cited library code allowed",
+                RulesOf6005.mayUseCodeInAssignment(false, true, false, true, false));
     }
 }
