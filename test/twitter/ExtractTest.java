@@ -9,10 +9,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 import org.junit.Test;
-import java.time.Instant;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Set;
 import java.util.HashSet;
 
 public class ExtractTest {
@@ -87,7 +84,7 @@ public class ExtractTest {
 	@Test
 	public void testGetMentionedUsersDedupAndCaseFold() {
 		Set<String> users = Extract
-				.getMentionedUsers(Arrays.asList(tweet1, new Tweet(5, "someone", "Hi @SHOAIB and @shoaib", d2)));
+				.getMentionedUsers(Arrays.asList(tweet1, new Tweet(5, "someone", "Hi @Shoaib and @shoaib", d2)));
 		assertEquals(new HashSet<>(Arrays.asList("shoaib")), users);
 	}
 

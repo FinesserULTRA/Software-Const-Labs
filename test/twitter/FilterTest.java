@@ -25,6 +25,8 @@ public class FilterTest {
     private static final Tweet tweet1 = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much?", d1);
     private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype", d2);
     
+    private static final List<Tweet> TWEETS = Arrays.asList(tweet1, tweet2);
+    
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
         assert false; // make sure assertions are enabled with VM argument: -ea
@@ -73,4 +75,24 @@ public class FilterTest {
      * in this test class.
      */
 
+    @Test
+    public void testContainingMultipleWordsAnyMatchesOnceEachTweet() {
+        List<Tweet> got = Filter.containing(TWEETS, Arrays.asList("rivest", "hype"));
+        // twee1 contains "rivest", tweet2 contains "hype"
+        assertEquals(Arrays.asList(tweet1, tweet2), got);
+    }
+
+    @Test
+    public void testContainingNone() {
+        List<Tweet> got = Filter.containing(TWEETS, Arrays.asList("absent"));
+        assertTrue(got.isEmpty());
+    }
+
+    @Test
+    public void testContainingWordBoundaries() {
+        Tweet tw = new Tweet(4, "eve", "reFun is not fun, FUN!", d2);
+        List<Tweet> got = Filter.containing(Arrays.asList(tw), Arrays.asList("fun"));
+        // must match whole words "fun" or "FUN" but not "reFun"
+        assertEquals(Arrays.asList(tw), got);
+    }
 }
