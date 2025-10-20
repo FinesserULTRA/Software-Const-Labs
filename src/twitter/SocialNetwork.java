@@ -71,9 +71,36 @@ public class SocialNetwork {
 	 *         descending order of follower count.
 	 */
 	public static List<String> influencers(Map<String, Set<String>> followsGraph) {
-		throw new RuntimeException("not implemented");
+		Map<String, Integer> indegree = new HashMap<>();
+
+		// Ensure all users (followers and followeedee) are present with default 0
+		for (Map.Entry<String, Set<String>> e : followsGraph.entrySet()) {
+			String follower = e.getKey();
+			indegree.putIfAbsent(follower, 0);
+			for (String followee : e.getValue()) {
+				indegree.putIfAbsent(followee, 0);
+			}
+		}
+
+		// Count followers (in-degree)
+		for (Map.Entry<String, Set<String>> e : followsGraph.entrySet()) {
+			for (String followee : e.getValue()) {
+				indegree.merge(followee, 1, Integer::sum);
+			}
+		}
+
+		List<String> users = new ArrayList<>(indegree.keySet());
+		users.sort((a, b) -> {
+			int cmp = Integer.compare(indegree.get(b), indegree.get(a)); // desc followers
+			if (cmp != 0)
+				return cmp;
+			return a.compareTo(b); // deterministic tie-breaker (not required by spec)
+		});
+		return users;
 	}
 
+	
+//	Helper-er
 	private static Set<String> extractMentions(String text) {
 		Set<String> users = new HashSet<>();
 		Matcher m = MENTION.matcher(text);
