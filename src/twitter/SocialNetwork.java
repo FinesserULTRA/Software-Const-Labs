@@ -3,13 +3,9 @@
  */
 package twitter;
 
-import java.util.List;
-import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * SocialNetwork provides methods that operate on a social network.
@@ -99,7 +95,6 @@ public class SocialNetwork {
 		return users;
 	}
 
-	
 //	Helper-er
 	private static Set<String> extractMentions(String text) {
 		Set<String> users = new HashSet<>();
