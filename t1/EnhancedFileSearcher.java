@@ -12,13 +12,24 @@ import java.util.Map;
  */
 public class EnhancedFileSearcher {
 
-    // Map: Key = File Name, Value = List of full paths (Enhancement 1)
+    // Map to store results: Key = File Name, Value = List of full paths (Enhancement 1)
     private final Map<String, List<String>> foundFiles = new HashMap<>();
+    // List of file names to search for
     private final List<String> targetFileNames;
+    // Flag for case sensitivity
     private final boolean isCaseSensitive; // Enhancement 3
+    // Counter for a specific target file's occurrences (for Enhancement 2)
     private final String countTarget;
-    private int count = 0; // Enhancement 2
+    private int count = 0;
 
+    /**
+     * Constructor for FileSearcher.
+     * 
+     * @param targetFileNames The list of file names to search for.
+     * @param isCaseSensitive True for case-sensitive search, false otherwise.
+     * @param countTarget     The specific file name to count occurrences of (can be
+     *                        null).
+     */
     public EnhancedFileSearcher(List<String> targetFileNames, boolean isCaseSensitive, String countTarget) {
         if (targetFileNames == null || targetFileNames.isEmpty()) {
             throw new IllegalArgumentException("Target file names cannot be empty.");
@@ -29,6 +40,13 @@ public class EnhancedFileSearcher {
         this.countTarget = countTarget;
     }
 
+    /**
+     * Starts the recursive search.
+     * 
+     * @param startDirPath The initial directory path.
+     * @return A map of found files (name -> list of paths).
+     * @throws IllegalArgumentException if the start directory is invalid.
+     */
     public Map<String, List<String>> search(String startDirPath) {
         File startDir = new File(startDirPath);
 
@@ -39,16 +57,17 @@ public class EnhancedFileSearcher {
         System.out.println("Starting search in: " + startDir.getAbsolutePath());
         recursiveSearch(startDir);
 
-        // Summary Output
         System.out.println("\n--- Search Results ---");
         if (foundFiles.isEmpty()) {
             System.out.println("No target files found.");
         } else {
             foundFiles.forEach((fileName, paths) -> {
                 System.out.printf("File '%s' found %d time(s). Full paths:\n", fileName, paths.size());
+                paths.forEach(path -> System.out.println("  - " + path));
             });
         }
 
+        // Enhancement 2 output
         if (countTarget != null) {
             System.out.printf("\nSpecific count for '%s': %d time(s).\n", countTarget, count);
         }
@@ -56,12 +75,21 @@ public class EnhancedFileSearcher {
         return foundFiles;
     }
 
+    /**
+     * The recursive search function.
+     * 
+     * @param currentFile The current file or directory being examined.
+     */
     private void recursiveSearch(File currentFile) {
+        // Error Handling: Check for null or non-existent files (though unlikely with
+        // File.listFiles())
         if (currentFile == null)
             return;
 
+        // Base Case Check: If it's a file, check if it's one of the targets
         if (currentFile.isFile()) {
             String fileName = currentFile.getName();
+            boolean foundMatch = false;
 
             for (String target : targetFileNames) {
                 boolean match;
@@ -70,35 +98,46 @@ public class EnhancedFileSearcher {
                 if (isCaseSensitive) {
                     match = fileName.equals(target);
                 } else {
-                    // Normalize both for comparison (Ensures case-insensitivity)
                     match = fileName.equalsIgnoreCase(target);
                 }
 
                 if (match) {
-                    // Store full path (Enhancement 1)
+                    foundMatch = true;
+                    // Add the path to the results map (Enhancement 1)
                     foundFiles.computeIfAbsent(fileName, k -> new ArrayList<>()).add(currentFile.getAbsolutePath());
-
-                    // Count specific file (Enhancement 2)
-                    if (countTarget != null) {
-                        // Check if the found file matches the count target (using the defined case
-                        // sensitivity)
-                        if ((isCaseSensitive && fileName.equals(countTarget)) ||
-                                (!isCaseSensitive && fileName.equalsIgnoreCase(countTarget))) {
-                            count++;
-                        }
+                    // Enhancement 2: Count the specific target file
+                    if (countTarget != null && target.equalsIgnoreCase(countTarget)) {
+                        count++;
                     }
-                    // Since we found a match for one of the targets, move to the next file/dir
+                    // Since we found a match for one of the targets, we can break and continue to
+                    // the next file/dir
                     break;
                 }
             }
 
+            if (foundMatch) {
+                System.out.println("✅ Found: " + currentFile.getAbsolutePath());
+            }
+
         } else if (currentFile.isDirectory()) {
+            // Recursive Step: If it's a directory, list its contents and call search on
+            // each
             File[] files = currentFile.listFiles();
             if (files != null) {
                 for (File file : files) {
-                    recursiveSearch(file);
+                    try {
+                        recursiveSearch(file);
+                    } catch (StackOverflowError e) {
+                        // Handle extremely deep recursion (very rare but possible with malicious
+                        // structures)
+                        System.err.println("Recursion depth limit reached at: " + file.getAbsolutePath());
+                    } catch (Exception e) {
+                        // General IO/Security Exception handling
+                        System.err.println("Error processing " + file.getAbsolutePath() + ": " + e.getMessage());
+                    }
                 }
             } else {
+                // Handle directories with restricted access (files is null)
                 System.err.println("❌ Cannot access directory: " + currentFile.getAbsolutePath());
             }
         }
@@ -127,7 +166,7 @@ public class EnhancedFileSearcher {
         }
 
         try {
-            FileSearcherEnh searcher = new FileSearcherEnh(targetFiles, isCaseSensitive, countTarget);
+            EnhancedFileSearcher searcher = new EnhancedFileSearcher(targetFiles, isCaseSensitive, countTarget);
             searcher.search(startDir);
         } catch (IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());
