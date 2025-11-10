@@ -6,6 +6,7 @@ public class EvenOddCheckerEnhanced {
     /**
      * Checks if a number is even using mutual recursion
      * Handles negative numbers correctly
+     * Uses optimization for large numbers to prevent stack overflow
      * @param n the number to check
      * @return true if even, false otherwise
      */
@@ -14,7 +15,10 @@ public class EvenOddCheckerEnhanced {
             return true;
         }
         if (n < 0) {
-            return isEven(-n);
+            n = -n;
+        }
+        if (n > 1000) {
+            return n % 2 == 0;
         }
         return isOdd(n - 1);
     }
@@ -22,6 +26,7 @@ public class EvenOddCheckerEnhanced {
     /**
      * Checks if a number is odd using mutual recursion
      * Handles negative numbers correctly
+     * Uses optimization for large numbers to prevent stack overflow
      * @param n the number to check
      * @return true if odd, false otherwise
      */
@@ -30,7 +35,10 @@ public class EvenOddCheckerEnhanced {
             return false;
         }
         if (n < 0) {
-            return isOdd(-n);
+            n = -n;
+        }
+        if (n > 1000) {
+            return n % 2 != 0;
         }
         return isEven(n - 1);
     }
@@ -51,6 +59,7 @@ public class EvenOddCheckerEnhanced {
         System.out.println("0: " + (isEven(0) ? "even" : "odd"));
         System.out.println("-1: " + (isEven(-1) ? "even" : "odd"));
         System.out.println("Integer.MAX_VALUE: " + (isEven(Integer.MAX_VALUE) ? "even" : "odd"));
-        System.out.println("Note: Integer.MIN_VALUE would cause stack overflow due to -(-2147483648) = -2147483648");
+        System.out.println("\nNote: Large numbers use modulo optimization to prevent stack overflow");
+        System.out.println("Pure mutual recursion demonstrated for numbers <= 1000");
     }
 }
