@@ -7,7 +7,7 @@ import java.util.Set;
  */
 public class FileSizeEnhanced {
     
-    private static Set<String> excludedExtensions = new HashSet<>();
+    final private static Set<String> excludedExtensions = new HashSet<>();
     
     /**
      * Recursively calculates directory size with file type exclusion
