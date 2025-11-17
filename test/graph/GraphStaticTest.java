@@ -15,13 +15,14 @@ import org.junit.Test;
  * To facilitate testing multiple implementations of Graph, instance methods are
  * tested in GraphInstanceTest.
  */
-public class GraphStaticTest {
+public abstract class GraphStaticTest {
     
     // Testing strategy
     //   empty()
     //     no inputs, only output is empty graph
     //     observe with vertices()
-    
+	public abstract Graph<String> emptyInstance();
+	
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
         assert false; // make sure assertions are enabled with VM argument: -ea
@@ -30,7 +31,7 @@ public class GraphStaticTest {
     @Test
     public void testEmptyVerticesEmpty() {
         assertEquals("expected empty() graph to have no vertices",
-                Collections.emptySet(), Graph.empty().vertices());
+                Collections.emptySet(), emptyInstance().vertices());
     }
     
     // TODO test other vertex label types in Problem 3.2
