@@ -1,0 +1,143 @@
+================================================================================
+                    Lab 14: Concurrency in Java - Output Results
+================================================================================
+
+================================================================================
+TASK 1: Introduction to Multithreading
+================================================================================
+
+Starting both threads concurrently...
+
+[NumberThread] Number: 1
+[SquareThread] Square of 1 = 1
+[NumberThread] Number: 2
+[SquareThread] Square of 2 = 4
+[NumberThread] Number: 3
+[SquareThread] Square of 3 = 9
+[NumberThread] Number: 4
+[SquareThread] Square of 4 = 16
+[NumberThread] Number: 5
+[SquareThread] Square of 5 = 25
+[NumberThread] Number: 6
+[SquareThread] Square of 6 = 36
+[NumberThread] Number: 7
+[SquareThread] Square of 7 = 49
+[NumberThread] Number: 8
+[SquareThread] Square of 8 = 64
+[NumberThread] Number: 9
+[SquareThread] Square of 9 = 81
+[NumberThread] Number: 10
+[SquareThread] Square of 10 = 100
+
+Both threads have completed execution.
+
+================================================================================
+TASK 2: Thread Synchronization
+================================================================================
+
+Starting three threads to increment a shared counter...
+
+[Thread-1] Completed 100 increments.
+[Thread-3] Completed 100 increments.
+[Thread-2] Completed 100 increments.
+
+All threads have completed.
+Final Counter Value: 300
+Expected Value: 300
+SUCCESS: Synchronization worked correctly!
+
+================================================================================
+TASK 3: Concurrent Data Structures
+================================================================================
+
+=== Demonstrating CopyOnWriteArrayList ===
+
+[ListReader-1] Reading list: [1]
+[ListWriter-1] Added: 1
+[ListWriter-2] Added: 6
+[ListReader-2] Reading list: [1]
+[ListWriter-2] Added: 7
+[ListWriter-1] Added: 2
+[ListReader-2] Reading list: [1, 6, 7, 2]
+[ListReader-1] Reading list: [1, 6, 7, 2]
+[ListWriter-1] Added: 3
+[ListWriter-2] Added: 8
+[ListWriter-1] Added: 4
+[ListWriter-2] Added: 9
+[ListReader-1] Reading list: [1, 6, 7, 2, 3, 8, 4, 9]
+[ListReader-2] Reading list: [1, 6, 7, 2, 3, 8, 4, 9]
+[ListWriter-1] Added: 5
+[ListWriter-2] Added: 10
+[ListReader-1] Reading list: [1, 6, 7, 2, 3, 8, 4, 9, 5, 10]
+[ListReader-2] Reading list: [1, 6, 7, 2, 3, 8, 4, 9, 5, 10]
+[ListReader-1] Reading list: [1, 6, 7, 2, 3, 8, 4, 9, 5, 10]
+[ListReader-2] Reading list: [1, 6, 7, 2, 3, 8, 4, 9, 5, 10]
+
+Final List Contents: [1, 6, 7, 2, 3, 8, 4, 9, 5, 10]
+List Size: 10
+
+=== Demonstrating ConcurrentHashMap ===
+
+[MapReader-1] Reading map: {}
+[MapReader-2] Reading map: {A1=10, B4=40}
+[MapWriter-1] Put: A1 -> 10
+[MapWriter-2] Put: B4 -> 40
+[MapWriter-1] Put: A2 -> 20
+[MapWriter-2] Put: B5 -> 50
+[MapReader-1] Reading map: {A1=10, A2=20, B4=40, B5=50}
+[MapReader-2] Reading map: {A1=10, A2=20, B4=40, B5=50}
+[MapWriter-1] Put: A3 -> 30
+[MapWriter-2] Put: B6 -> 60
+[MapReader-1] Reading map: {A1=10, A2=20, B4=40, A3=30, B5=50, B6=60}
+[MapReader-2] Reading map: {A1=10, A2=20, B4=40, A3=30, B5=50, B6=60}
+[MapReader-2] Reading map: {A1=10, A2=20, B4=40, A3=30, B5=50, B6=60}
+[MapReader-1] Reading map: {A1=10, A2=20, B4=40, A3=30, B5=50, B6=60}
+[MapReader-2] Reading map: {A1=10, A2=20, B4=40, A3=30, B5=50, B6=60}
+[MapReader-1] Reading map: {A1=10, A2=20, B4=40, A3=30, B5=50, B6=60}
+
+Final Map Contents: {A1=10, A2=20, B4=40, A3=30, B5=50, B6=60}
+Map Size: 6
+
+================================================================================
+TASK 4: Simulation of Bank Transaction System
+================================================================================
+
+=== Bank Transaction System Simulation ===
+Initial Balance: $1000
+Starting 5 client threads...
+
+[Alice] WITHDRAW: $93 | Balance: $907
+[Eve] DEPOSIT: $70 | Balance: $1146
+[Diana] DEPOSIT: $94 | Balance: $1076
+[Charlie] DEPOSIT: $10 | Balance: $917
+[Bob] DEPOSIT: $65 | Balance: $982
+[Charlie] DEPOSIT: $104 | Balance: $1250
+[Alice] DEPOSIT: $19 | Balance: $1269
+[Bob] WITHDRAW: $76 | Balance: $1193
+[Eve] WITHDRAW: $17 | Balance: $1176
+[Diana] WITHDRAW: $71 | Balance: $1105
+[Eve] WITHDRAW: $92 | Balance: $1013
+[Diana] WITHDRAW: $55 | Balance: $958
+[Bob] WITHDRAW: $76 | Balance: $882
+[Charlie] WITHDRAW: $66 | Balance: $816
+[Alice] WITHDRAW: $19 | Balance: $797
+[Bob] WITHDRAW: $93 | Balance: $704
+[Eve] WITHDRAW: $52 | Balance: $652
+[Diana] DEPOSIT: $102 | Balance: $754
+[Charlie] DEPOSIT: $57 | Balance: $811
+[Alice] DEPOSIT: $90 | Balance: $901
+[Diana] DEPOSIT: $63 | Balance: $964
+[Charlie] WITHDRAW: $46 | Balance: $918
+[Bob] DEPOSIT: $69 | Balance: $987
+[Eve] DEPOSIT: $96 | Balance: $1083
+[Alice] DEPOSIT: $93 | Balance: $1176
+
+=== All Transactions Completed ===
+Final Balance: $1176
+Total Deposits: $932
+Total Withdrawals: $756
+Expected Final Balance: $1176 (Verified: Balance is consistent!)
+
+================================================================================
+                              END OF OUTPUT
+================================================================================
